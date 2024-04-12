@@ -2,14 +2,23 @@ import { Controller, Get, Param, Put, Query, Body, Post, Delete  } from '@nestjs
 import { HostelsService } from './hostels.service';
 import { CreateHostelDto } from './dto/create-hostel';
 import { UpdateHostelDto } from './dto/update-hostel';
+import { Hostel } from './hostels.model';
+import { IOrderTypes } from 'src/models';
 
 @Controller('hostels')
 export class HostelsController {
     constructor(private readonly hostelsService: HostelsService){}
 
     @Get()
-    async getHostels(@Query('limit') limit: string, @Query('offset') offset: string){
-        return await this.hostelsService.getHostels(Number(limit), Number(offset));
+    async getHostels(
+        @Query('limit') limit: string,
+        @Query('offset') offset: string, 
+        @Query('orderField') orderField?: keyof Hostel,
+        @Query('orderType') orderType?: IOrderTypes, 
+        @Query('filter') filterField?:  keyof Hostel, 
+
+    ){
+        return await this.hostelsService.getHostels(Number(limit), Number(offset), {field: orderField, type: orderType}, filter);
     }
 
     @Post()

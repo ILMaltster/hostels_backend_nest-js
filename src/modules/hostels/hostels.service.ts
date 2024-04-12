@@ -3,14 +3,19 @@ import { Hostel } from './hostels.model';
 import { InjectModel } from '@nestjs/sequelize';
 import { CreateHostelDto } from './dto/create-hostel';
 import { UpdateHostelDto } from './dto/update-hostel';
-import { IPaginationModel } from 'src/models';
+import { IFilter, IOrder, IPaginationModel } from 'src/models';
 
 @Injectable()
 export class HostelsService {
     constructor(@InjectModel(Hostel) private hostelRepository: typeof Hostel){}
 
-    public async getHostels(limit: number, offset: number){
-        const {count, rows} = await this.hostelRepository.findAndCountAll({limit, offset, order: [['name', 'DESC']]})
+    public async getHostels(limit: number, offset: number, order?: IOrder<keyof Hostel>, filter?: IFilter<keyof Hostel>){
+        const {count, rows} = await this.hostelRepository.findAndCountAll({
+            limit, 
+            offset, 
+            order: [[order.field || 'name', order.type || 'desc']]
+        })
+
         const paginationHostel: IPaginationModel<Hostel> = {count, rows, limit}
         return paginationHostel;
     }
