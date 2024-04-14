@@ -14,9 +14,9 @@ export class HostelsService {
             limit, 
             offset, 
             order: [[order.field || 'name', order.type || 'desc']]
-        })
+        });
 
-        const paginationHostel: IPaginationModel<Hostel> = {count, rows, limit}
+        const paginationHostel: IPaginationModel<Hostel> = {count, rows, limit};
         return paginationHostel;
     }
 

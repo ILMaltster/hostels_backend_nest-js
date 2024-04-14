@@ -15,10 +15,12 @@ export class HostelsController {
         @Query('offset') offset: string, 
         @Query('orderField') orderField?: keyof Hostel,
         @Query('orderType') orderType?: IOrderTypes, 
-        @Query('filter') filterField?:  keyof Hostel, 
+        @Query('filterField') filterField?:  keyof Hostel, 
+        @Query('filterType') filterType?:  keyof Hostel, 
+
 
     ){
-        return await this.hostelsService.getHostels(Number(limit), Number(offset), {field: orderField, type: orderType}, filter);
+        return await this.hostelsService.getHostels(Number(limit), Number(offset), {field: orderField, type: orderType});
     }
 
     @Post()
