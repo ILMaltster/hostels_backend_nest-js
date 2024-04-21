@@ -13,5 +13,16 @@ export interface IOrder<T = any> {
 
 export interface IFilter<T = any> {
     field: T;
-    value: string | number;
+    operator: any;
+    value?: string | number;
 }
+
+export interface ISearch<T = any> {
+    field: T;
+    value: string;
+}
+
+type TGenericOperatorMark = 'isEmpty' | 'isNotEmpty' | 'isAnyOf'
+export type TIntegerOperatorMark = '>' | '<' | '=' | '!=' | '>=' | '<=' | TGenericOperatorMark;
+export type TStringOperatorMark = 'contains' | 'equals' | 'startWith' | 'endWith' | TGenericOperatorMark;
+export type IOperatorMark = TIntegerOperatorMark | TStringOperatorMark;

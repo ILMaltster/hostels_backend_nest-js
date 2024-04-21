@@ -8,13 +8,13 @@ interface HosterCreationsProps {
 
 @Table({tableName: 'hostels', timestamps: false})
 export class Hostel extends Model<Hostel, HosterCreationsProps> {
-    @Column({type: DataType.INTEGER, unique: true, primaryKey: true, autoIncrement: true})
+    @Column({type: DataType.INTEGER, unique: true, autoIncrement: true})
     id: number;
 
     @Column({type: DataType.STRING, unique: false})
     name: string;
 
-    @Column({type: DataType.STRING, unique: true})
+    @Column({type: DataType.STRING, unique: true, primaryKey: true})
     tin: string;
 
     @Column({type: DataType.STRING, unique: false})
