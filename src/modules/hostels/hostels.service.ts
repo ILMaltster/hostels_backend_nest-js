@@ -7,6 +7,7 @@ import { IFilter, IOrder, IPaginationModel, ISearch } from 'src/models';
 import { Op, WhereOptions } from 'sequelize';
 import sequelize from 'sequelize';
 import { getSequeilizeOperator } from 'src/utils/getSequelizeOperator';
+import { getSearchOperation } from 'src/utils/getSearchOperation';
 
 @Injectable()
 export class HostelsService {
@@ -20,11 +21,11 @@ export class HostelsService {
         filter?: IFilter<keyof Hostel>
     ){
         const where: WhereOptions<Hostel> | undefined = search.field 
-            ? sequelize.where(sequelize.cast(sequelize.col(search.field), 'varchar'), { [Op.iLike]: `%${search.value}%`})
+            ? sequelize.where(sequelize.col(search.field), getSearchOperation(search.value))
             : undefined
 
         const filterSearch: WhereOptions<Hostel> | undefined = filter.field 
-            ? sequelize.where(sequelize.cast(sequelize.col(search.field), 'varchar'), { [getSequeilizeOperator(filter.operator)]: search.value ?? null})
+            ? sequelize.where(sequelize.col(filter.field), getSequeilizeOperator(filter.operator, filter.value))
             : undefined
 
         const {count, rows} = await this.hostelRepository.findAndCountAll({
@@ -32,8 +33,8 @@ export class HostelsService {
             offset, 
             where: {
                 [Op.and]: [
+                    filterSearch,
                     where,
-                    filterSearch
                 ]
             },
             order: [[order.field || 'name', order.type || 'desc']]

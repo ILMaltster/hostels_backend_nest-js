@@ -5,6 +5,16 @@ import { UpdateHostelDto } from './dto/update-hostel';
 import { Hostel } from './hostels.model';
 import { IFilter, IOrder, IOrderTypes, ISearch } from 'src/models';
 
+/**
+ * Функция предназначена для конвертирования типа значения по наименованию поля.
+ * @param type тип, полученный из модели.
+ * @param value значение для преобразования.
+ * @returns преобразованное значение.
+ */
+const convertIfIntegerType = (type: string, value: string | number): string | number => {
+    return type === 'INTEGER' ? Number(value) : value
+}
+
 @Controller('hostels')
 export class HostelsController {
     constructor(private readonly hostelsService: HostelsService){}
@@ -13,19 +23,36 @@ export class HostelsController {
     async getHostels(
         @Query('limit') limit: string,
         @Query('offset') offset: string, 
-        @Query('orderField') orderField?: IOrder<keyof Hostel>['field'],
+        @Query('orderField') orderField?: IOrder['field'],
         @Query('orderType') orderType?: IOrder['type'], 
-        @Query('searchField') searchField?: ISearch<keyof Hostel>['field'],
-        @Query('searchValue') searchValue?: ISearch<keyof Hostel>['value'], 
-        @Query('filterField') filterField?: IFilter<keyof Hostel>['field'], 
+        @Query('searchField') searchField?: ISearch['field'],
+        @Query('searchValue') searchValue?: string, 
+        @Query('filterField') filterField?: IFilter['field'], 
         @Query('filterOperator') filterOperator?: IFilter['operator'],
-        @Query('filterValue') filterValue?: IFilter['value'],
+        @Query('filterValue') filterValue?: string,
     ){
+        let convSearchValue: string | number = '';
+        let convFilterValue: string | number | Array<string | number> = '';
+
+        // Конвертирует тип значение по наименованию поля в соотвесвтии модели.
+        if (searchField)
+            convSearchValue = convertIfIntegerType(Hostel.getAttributes()[searchField].type.constructor.name, searchValue);
+        if (filterField)
+            convFilterValue = convertIfIntegerType(Hostel.getAttributes()[filterField].type.constructor.name, filterValue);
+        if (filterOperator === 'isAnyOf' && typeof convFilterValue === 'string')
+            convFilterValue = convFilterValue.split(',');
+
         const order: IOrder<keyof Hostel> = {field: orderField, type: orderType};
-        const search: ISearch<keyof Hostel> = {field: searchField, value: searchValue}
-        const filter: IFilter<keyof Hostel> = {field: filterField, operator: filterOperator, value: filterValue}
+        const search: ISearch<keyof Hostel> = {field: searchField, value: convSearchValue}
+        const filter: IFilter<keyof Hostel> = {field: filterField, operator: filterOperator, value: convFilterValue}
         
-        return await this.hostelsService.getHostels(Number(limit), Number(offset), order, search, filter);
+        return await this.hostelsService.getHostels(
+            Number(limit), 
+            Number(offset), 
+            order, 
+            search, 
+            filter
+        );
     }
 
     @Post()

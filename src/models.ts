@@ -13,16 +13,16 @@ export interface IOrder<T = any> {
 
 export interface IFilter<T = any> {
     field: T;
-    operator: any;
-    value?: string | number;
+    operator: IOperatorMark;
+    value?: string | number | Array<string | number>;
 }
 
 export interface ISearch<T = any> {
     field: T;
-    value: string;
+    value: string | number;
 }
 
 type TGenericOperatorMark = 'isEmpty' | 'isNotEmpty' | 'isAnyOf'
 export type TIntegerOperatorMark = '>' | '<' | '=' | '!=' | '>=' | '<=' | TGenericOperatorMark;
-export type TStringOperatorMark = 'contains' | 'equals' | 'startWith' | 'endWith' | TGenericOperatorMark;
+export type TStringOperatorMark = 'contains' | 'equals' | 'startsWith' | 'endWith' | TGenericOperatorMark;
 export type IOperatorMark = TIntegerOperatorMark | TStringOperatorMark;
