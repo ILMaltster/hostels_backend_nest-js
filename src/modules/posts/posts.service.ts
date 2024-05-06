@@ -48,11 +48,11 @@ export class PostsService {
         return this.postsRepository.create(dto);
     }
     
-    public async editPost(body: UpdatePostDto, name: string){
-        return this.postsRepository.update(body, {where: {name}});   
+    public async editPost(body: UpdatePostDto, id: number){
+        return this.postsRepository.update(body, {where: {id}});   
     }
 
-    public async deletePost(name: string){
-        return this.postsRepository.destroy({where: {name}});   
+    public async deletePost(id: number){
+        return this.postsRepository.destroy({where: {id}});   
     }
 }

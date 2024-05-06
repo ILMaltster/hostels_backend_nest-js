@@ -9,6 +9,9 @@ import { PostsModule } from './modules/posts/posts.module';
 import { HistoryVisitorsDataModule } from './modules/history-visitors-data/history-visitors-data.module';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { Hostel } from './modules/hostels/hostels.model';
+import { Post } from './modules/posts/posts.model';
+import { Staff } from './modules/staff/staff.model';
+import { Visitor } from './modules/visitors/visitors.model';
 
 @Module({
   imports: [
@@ -21,7 +24,7 @@ import { Hostel } from './modules/hostels/hostels.model';
       database: process.env.DATABASE_NAME_PG,
       password: process.env.PASSWORD_PG,
       username: process.env.USER_PG,
-      models: [Hostel],
+      models: [Hostel, Post, Staff, Visitor],
       port: Number(process.env.PORT_PG),
       define: {timestamps: false}
     }),

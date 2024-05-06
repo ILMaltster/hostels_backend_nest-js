@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Put, Query, Body, Post, Delete  } from '@nestjs/common';
+import { Controller, Get, Param, Put, Query, Body, Post, Delete, ParseIntPipe  } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post';
 import { UpdatePostDto } from './dto/update-post';
 import { IFilter, IOrder, IOrderTypes, ISearch } from 'src/models';
@@ -61,12 +61,12 @@ export class PostsController {
     }
     
     @Put(':id')
-    async editHostel(@Param('id') tin: string, @Body() body: UpdatePostDto){
-        return await this.postsService.editPost(body, tin);
+    async editHostel(@Param('id', ParseIntPipe) id: number, @Body() body: UpdatePostDto){
+        return await this.postsService.editPost(body, id);
     }
 
     @Delete(':id')
-    async deleteHostel(@Param('id') tin: string){
-        return await this.postsService.deletePost(tin);
+    async deleteHostel(@Param('id', ParseIntPipe) id: number){
+        return await this.postsService.deletePost(id);
     }
 }
