@@ -1,6 +1,6 @@
 import { Controller, Get, Param, Put, Query, Body, Post, Delete, ParseIntPipe  } from '@nestjs/common';
-import { CreateVisitorDto } from './dto/create-staff';
-import { UpdateVisitorDto } from './dto/update-staff';
+import { CreateVisitorDto } from './dto/create-visitor';
+import { UpdateVisitorDto } from './dto/update-visitor';
 import { IFilter, IOrder, IOrderTypes, ISearch } from 'src/models';
 import { Visitor } from './visitors.model';
 import { VisitorService } from './visitors.service';
@@ -15,7 +15,7 @@ const convertIfIntegerType = (type: string, value: string | number): string | nu
     return type === 'INTEGER' ? Number(value) : value
 }
 
-@Controller('staff')
+@Controller('visitors')
 export class VisitorsController {
     constructor(private readonly visitorService: VisitorService){}
 
@@ -56,17 +56,17 @@ export class VisitorsController {
     }
 
     @Post()
-    async createHostel(@Body() body: CreateVisitorDto){
-        return await this.visitorService.createPost(body);
+    async createVisitor(@Body() body: CreateVisitorDto){
+        return await this.visitorService.createVisitor(body);
     }
     
     @Put(':id')
-    async editHostel(@Param('id', ParseIntPipe) id: number, @Body() body: UpdateVisitorDto){
-        return await this.visitorService.editPost(body, id);
+    async editVisitor(@Param('id', ParseIntPipe) id: number, @Body() body: UpdateVisitorDto){
+        return await this.visitorService.editVisitor(body, id);
     }
 
     @Delete(':id')
-    async deleteHostel(@Param('id', ParseIntPipe) id: number){
-        return await this.visitorService.deletePost(id);
+    async deleteVisitor(@Param('id', ParseIntPipe) id: number){
+        return await this.visitorService.deleteVisitor(id);
     }
 }

@@ -12,6 +12,10 @@ import { Hostel } from './modules/hostels/hostels.model';
 import { Post } from './modules/posts/posts.model';
 import { Staff } from './modules/staff/staff.model';
 import { Visitor } from './modules/visitors/visitors.model';
+import { HotelRoom } from './modules/hotel-rooms/hotel-rooms.model';
+import { Booking } from './modules/bookings/bookings.model';
+import { ReportsModule } from './modules/reports/reports.module';
+import { Sequelize } from 'sequelize';
 
 @Module({
   imports: [
@@ -24,8 +28,8 @@ import { Visitor } from './modules/visitors/visitors.model';
       database: process.env.DATABASE_NAME_PG,
       password: process.env.PASSWORD_PG,
       username: process.env.USER_PG,
-      models: [Hostel, Post, Staff, Visitor],
       port: Number(process.env.PORT_PG),
+      models: [Hostel, Post, Staff, Visitor, HotelRoom, Booking],
       define: {timestamps: false}
     }),
     HostelsModule,
@@ -35,6 +39,7 @@ import { Visitor } from './modules/visitors/visitors.model';
     HotelRoomsModule,
     PostsModule,
     HistoryVisitorsDataModule,
+    ReportsModule,
   ],
 })
 

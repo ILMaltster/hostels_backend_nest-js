@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { CreateVisitorDto } from './dto/create-staff';
-import { UpdateVisitorDto } from './dto/update-staff';
+import { CreateVisitorDto } from './dto/create-visitor';
+import { UpdateVisitorDto } from './dto/update-visitor';
 import { IFilter, IOrder, IPaginationModel, ISearch } from 'src/models';
 import { Op, WhereOptions } from 'sequelize';
 import sequelize from 'sequelize';
@@ -44,15 +44,15 @@ export class VisitorService {
         return paginationPosts;
     }
 
-    public async createPost(dto: CreateVisitorDto){
+    public async createVisitor(dto: CreateVisitorDto){
         return this.visitorsRepository.create(dto);
     }
     
-    public async editPost(body: UpdateVisitorDto, id: number){
+    public async editVisitor(body: UpdateVisitorDto, id: number){
         return this.visitorsRepository.update(body, {where: {id}});   
     }
 
-    public async deletePost(id: number){
+    public async deleteVisitor(id: number){
         return this.visitorsRepository.destroy({where: {id}});   
     }
 }
