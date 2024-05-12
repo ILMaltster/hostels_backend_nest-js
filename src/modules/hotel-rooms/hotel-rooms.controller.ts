@@ -1,6 +1,6 @@
 import { Controller, Get, Param, Put, Query, Body, Post, Delete, ParseIntPipe  } from '@nestjs/common';
 import { CreateHotelRoomDto } from './dto/create-hotel-room';
-import { UpdateBookingDto } from './dto/update-hotel-room';
+import { UpdateHotelRoomDto } from './dto/update-hotel-room';
 import { IFilter, IOrder, IOrderTypes, ISearch } from 'src/models';
 import { HotelRoom } from './hotel-rooms.model';
 import { HotelRoomsService } from './hotel-rooms.service';
@@ -64,7 +64,7 @@ export class HotelRoomsController {
     async editHotelRoom(
         @Param('hotel_id', ParseIntPipe) hotelId: number, 
         @Param('hotel_room_number', ParseIntPipe) hotelRoomNumber: number, 
-        @Body() body: UpdateBookingDto
+        @Body() body: UpdateHotelRoomDto
     ){
         return await this.hotelRoomService.editVisitor(body, hotelId, hotelRoomNumber);
     }

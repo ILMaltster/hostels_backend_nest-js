@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { CreateHotelRoomDto } from './dto/create-hotel-room';
-import { UpdateBookingDto } from './dto/update-hotel-room';
+import { UpdateHotelRoomDto } from './dto/update-hotel-room';
 import { IFilter, IOrder, IPaginationModel, ISearch } from 'src/models';
 import { Op, WhereOptions } from 'sequelize';
 import sequelize from 'sequelize';
@@ -11,7 +11,7 @@ import { HotelRoom } from './hotel-rooms.model';
 
 @Injectable()
 export class HotelRoomsService {
-    constructor(@InjectModel(HotelRoom) private visitorsRepository: typeof HotelRoom){}
+    constructor(@InjectModel(HotelRoom) private hotelRoomsRepository: typeof HotelRoom){}
 
     public async getPosts(
         limit: number, 
@@ -28,7 +28,7 @@ export class HotelRoomsService {
             ? sequelize.where(sequelize.col(filter.field), getSequeilizeOperator(filter.operator, filter.value))
             : undefined
 
-        const {count, rows} = await this.visitorsRepository.findAndCountAll({
+        let {count, rows} = await this.hotelRoomsRepository.findAndCountAll({
             limit, 
             offset, 
             where: {
@@ -40,16 +40,26 @@ export class HotelRoomsService {
             order: [[order.field || 'hotel_id', order.type || 'desc']]
         });
 
+        rows.forEach((row, index) => {
+            // @ts-ignore
+            rows[index].price_per_day = rows[index].price_per_day.replace('?', '')
+        })
+
         const paginationPosts: IPaginationModel<HotelRoom> = {count, rows, limit};
         return paginationPosts;
     }
 
     public async createVisitor(dto: CreateHotelRoomDto){
-        return this.visitorsRepository.create(dto);
+        return this.hotelRoomsRepository.create(dto);
     }
     
-    public async editVisitor(body: UpdateBookingDto, hotelId: number, hotelRoomNumber: number){
-        return this.visitorsRepository.update(body, {
+    public async editVisitor(body: UpdateHotelRoomDto, hotelId: number, hotelRoomNumber: number){
+        let parsedBody = {
+            ...body,
+            price_per_day: Number(body.price_per_day.replace(/\s+/g, '').replaceAll(',', '.'))
+        }
+        console.log(parsedBody);
+        return this.hotelRoomsRepository.update(parsedBody, {
             where: {
                 'hotel_id': hotelId, 
                 'hotel_room_number':hotelRoomNumber
@@ -58,7 +68,7 @@ export class HotelRoomsService {
     }
 
     public async deleteVisitor( hotelId: number, hotelRoomNumber: number){
-        return this.visitorsRepository.destroy({ where: {
+        return this.hotelRoomsRepository.destroy({ where: {
             'hotel_id': hotelId, 
             'hotel_room_number':hotelRoomNumber
         }});   

@@ -10,7 +10,7 @@ export class ReportsService {
     public async profitableRooms(from: Date, to: Date, limit: number, offset: number){
         const count = Number((await this.sequelize.query<{count: number}>(
             `SELECT count(*) from (` +
-            `SELECT hr.description, b.hotel_room_id, b.hotel_id, sum(price_per_day/capacity) ` +
+            `SELECT b.hotel_room_id, b.hotel_id ` +
             `FROM bookings b JOIN hotel_rooms hr on hotel_room_id = hotel_room_number ` +
             `WHERE arrival_date between '${from.toLocaleDateString()}' and '${to.toLocaleDateString()}' ` +
             `GROUP BY (b.hotel_room_id, b.hotel_id, hr.description))`,
@@ -18,7 +18,7 @@ export class ReportsService {
             ))[0].count);
 
         const profitableRooms = await this.sequelize.query(
-            `SELECT hr.description, b.hotel_room_id, b.hotel_id, sum(price_per_day/capacity) ` +
+            `SELECT hr.description, b.hotel_room_id, b.hotel_id, sum(price_per_day/capacity * (b.departure_date - b.arrival_date)) ` +
             `FROM bookings b JOIN hotel_rooms hr on hotel_room_id = hotel_room_number ` +
             `WHERE arrival_date between '${from.toLocaleDateString()}' and '${to.toLocaleDateString()}' ` +
             `GROUP BY (b.hotel_room_id, b.hotel_id, hr.description) ` +

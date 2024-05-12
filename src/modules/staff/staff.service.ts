@@ -48,11 +48,11 @@ export class StaffService {
         return this.staffRepository.create(dto);
     }
     
-    public async editPost(body: UpdateStaffDto, id: number){
-        return this.staffRepository.update(body, {where: {id}});   
+    public async editPost(body: UpdateStaffDto, tin: string){
+        return this.staffRepository.update(body, {where: {tin}});   
     }
 
-    public async deletePost(id: number){
-        return this.staffRepository.destroy({where: {id}});   
+    public async deletePost(tin: string){
+        return this.staffRepository.destroy({where: {tin}});   
     }
 }

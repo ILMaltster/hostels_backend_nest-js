@@ -60,13 +60,13 @@ export class StaffController {
         return await this.postsService.createPost(body);
     }
     
-    @Put(':id')
-    async editHostel(@Param('id', ParseIntPipe) id: number, @Body() body: UpdateStaffDto){
-        return await this.postsService.editPost(body, id);
+    @Put(':tin')
+    async editHostel(@Param('tin') tin: string, @Body() body: UpdateStaffDto){
+        return await this.postsService.editPost(body, tin);
     }
 
-    @Delete(':id')
-    async deleteHostel(@Param('id', ParseIntPipe) id: number){
-        return await this.postsService.deletePost(id);
+    @Delete(':tin')
+    async deleteHostel(@Param('tin') tin: string){
+        return await this.postsService.deletePost(tin);
     }
 }
